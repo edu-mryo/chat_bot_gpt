@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #chat-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      #chat-window {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 300px;
+        height: 400px;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+      }
+
+      #chat-container {
+        flex: 1;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      #message-input-container {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+      }
+
+      #message-input {
+        flex: 1;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px;
+      }
+
+      #send-button {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        margin-left: 10px;
+        cursor: pointer;
+      }
+
+      .user {
+        color: #007bff;
+        margin-bottom: 5px;
+      }
+
+      .bot {
+        color: #444;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+      ultricies in neque eget suscipit. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Proin dolor metus, tempus et commodo dictum, scelerisque
+      fermentum ipsum. Praesent at condimentum lacus, quis luctus lectus.
+      Vivamus faucibus nisl et massa scelerisque efficitur. Integer id ante ac
+      arcu tempor vestibulum. Nam in porta arcu. Donec aliquet quam vitae lacus
+      pharetra malesuada.
+    </p>
+
+    <div id="chat-icon" onclick="toggleChatWindow()">💬</div>
+    <div id="chat-window">
+      <div id="chat-container"></div>
+      <div id="message-input-container">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Type your message..."
+          onkeydown="handleKeyPress(event)"
+        />
+        <button id="send-button" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      // Existing JavaScript code from previous examples
+
+      let conversationHistory = "";
+
+      function sendMessage() {
+        const input = document.getElementById("message-input");
+        const message = input.value;
+        if (!message) return;
+
+        addMessageToChat("user", message);
+        input.value = "";
+
+        conversationHistory += `User: ${message}\n`;
+        google.script.run
+          .withSuccessHandler(handleBotResponse)
+          .getReply(message, conversationHistory);
+      }
+
+      function handleBotResponse(response) {
+        conversationHistory += `Bot: ${response}\n`;
+        addMessageToChat("bot", response);
+        const chatContainer = document.getElementById("chat-container");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      function addMessageToChat(sender, message) {
+        const chatContainer = document.getElementById("chat-container");
+        const messageElement = document.createElement("div");
+        messageElement.classList.add(sender);
+        messageElement.textContent = `${sender.toUpperCase()}: ${message}`;
+        chatContainer.appendChild(messageElement);
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function toggleChatWindow() {
+        const chatWindow = document.getElementById("chat-window");
+        chatWindow.style.display =
+          chatWindow.style.display === "none" ? "flex" : "none";
+      }
+    </script>
+  </body>
+</html>
