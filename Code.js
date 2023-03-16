@@ -1,4 +1,6 @@
-const openaiApiKey =;
+import config from './config.js';
+
+const openaiApiKey = config.apiKey;
 
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index.html');
